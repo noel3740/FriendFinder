@@ -1,5 +1,5 @@
 //Add dependencies
-var path = require("path");
+const path = require("path");
 
 //Export the function
 module.exports = function (app) {
