@@ -8,49 +8,122 @@
 
     <section class="card mb-3">
         <div class="card-body">
-            <form>
+            <form id="createSurvey" class="needs-validation" novalidate>
                 <h5 class="card-title">About You</h5>
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Enter your name"
-                        required>
+                    <input type="text" class="form-control" name="name" placeholder="Enter your name" required>
                 </div>
                 <div class="form-group">
                     <label for="photoImageUrl">Link to Photo Image</label>
-                    <input type="url" class="form-control" placeholder="https://example.com" pattern="https://.*" id="photoImageUrl"
-                        aria-describedby="emailHelp" placeholder="Enter your name" required>
+                    <input type="url" class="form-control" placeholder="https://example.com" pattern="https://.*|http://.*"
+                        name="photoImageUrl" placeholder="Enter your name" required>
                 </div>
 
                 <hr>
 
+                {{#each questions}}
                 <div class="form-group">
-                    <h5 class="card-title">Question 1</h5>
-                    <label for="question1">Your mind is always buzzing with unexplored ideas and plans.</label>
-                    <select class="form-control" id="question1">
+                    <h5 class="card-title">Question {{id}}</h5>
+                    <label for="question1">{{question}}</label>
+                    <select class="form-control surveyQuestion" name="question{{id}}" style="width:auto;" required>
                         <option></option>
-                        <option>1 (strongly agree)</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5 (strongly disagree)</option>
+                        <option value="1">1 (strongly agree)</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5 (strongly disagree)</option>
                     </select>
                 </div>
+                {{/each}}
 
-                <div class="form-group">
-                    <h5 class="card-title">Question 2</h5>
-                    <label for="question1">Your mind is always buzzing with unexplored ideas and plans.</label>
-                    <select class="form-control" id="question1">
-                        <option></option>
-                        <option>1 (strongly agree)</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5 (strongly disagree)</option>
-                    </select>
-                </div>
-
+                <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
     </section>
-    
+
+    <!--The modal popup section-->
+    <section>
+        <div class="modal" tabindex="-1" role="dialog" id="bestMatchModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">Your Best Match</h2>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center" id="bestMatchModalBody"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script type="text/javascript">
+
+        $(document).ready(() => {
+            //Loop thru all the forms that have the "needs-validation" class
+            //So that we can initialize the look of the fields that are required 
+            $(".needs-validation").each(function () {
+                this.checkValidity();
+                this.classList.add('was-validated');
+            });
+        })
+
+        //Function that is run when a user hits submit on the survey page. 
+        $("#createSurvey").on("submit", function (event) {
+            // Make sure to preventDefault on a submit event.
+            event.preventDefault();
+
+            //Check for errors in required fields and prevent post to API if there are errors. 
+            if (this.checkValidity()) {
+
+                //Loop thru all the survey questions to build out the scores array
+                const scores = [];
+
+                $(".surveyQuestion").each(function () {
+                    scores.push(this.value);
+                });
+
+
+                // create a new friend object that we want to create
+                var newFriend = {
+                    name: this.name.value,
+                    photo: this.photoImageUrl.value,
+                    scores: scores
+                };
+
+                // Send the POST request.
+                $.ajax("/api/friends", {
+                    type: "POST",
+                    data: newFriend
+                }).then(
+                    function (resp) {
+
+                        if (resp.mostCompatibleFriend) {
+                            const modalBody = $("#bestMatchModalBody");
+                            modalBody.empty();
+
+                            modalBody.append($("<h3>").text(resp.mostCompatibleFriend.name));
+                            modalBody.append($("<img>").attr({
+                                src: resp.mostCompatibleFriend.photo,
+                                alt: resp.mostCompatibleFriend.name,
+                                width: "100%"
+                            }));
+
+                            $("#bestMatchModal").modal('show');
+                        }
+                    }
+                );
+
+            }
+
+            this.classList.add('was-validated');
+
+        });
+    </script>
+
 </div>
