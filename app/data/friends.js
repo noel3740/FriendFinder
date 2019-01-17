@@ -139,7 +139,7 @@ const friends = [
       {
         "routeName": "haileesteinfeld",
         "name":"Hailee Steinfeld",
-        "photo":"https://cdn1.thr.com/sites/default/files/imagecache/portrait_300x450/2012/05/brad_pitt_chanel_a_p.jpg",
+        "photo":"https://image.tmdb.org/t/p/w600_and_h900_bestv2/vKwqK9DIlvoQlodbRTONWSghLk4.jpg",
         "scores":[
             1,
             2,
