@@ -57,8 +57,6 @@ module.exports = function (app) {
         // Using a RegEx Pattern to remove spaces from the new friends name so we can store it in a routeName property
         newFriend.routeName = newFriend.name.replace(/\s+/g, "").toLowerCase();
 
-        console.log(newFriend);
-
         //Get the friend that is most compatible
         const compatibleFriend = getMostCompatibleFriend(newFriend);
 
@@ -67,8 +65,10 @@ module.exports = function (app) {
         // Else create a new friend
         let existingFriend = friends.find(friend => friend.routeName === newFriend.routeName);
         if (existingFriend) {
+            console.log("Friend already exists. Updating existing friend");
             friends.splice(friends.indexOf(existingFriend), 1, newFriend);
         } else {
+            console.log("This is a new friend");
             friends.push(newFriend);
         }
 
