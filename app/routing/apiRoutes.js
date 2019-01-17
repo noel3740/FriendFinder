@@ -26,8 +26,8 @@ function getMostCompatibleFriend(friendToCompare) {
 
             //If the mostCompatibleFriend does not have one assigned or the total score difference for the current
             //friend is lower than the current most compatible friend then assign this friend as the most compatbile friend
-            if (!mostCompatibleFriend.totalScoreDifference ||
-                mostCompatibleFriend.totalScoreDifference < totalScoreDifference) {
+            if (mostCompatibleFriend.totalScoreDifference === null ||
+                totalScoreDifference < mostCompatibleFriend.totalScoreDifference) {
 
                 mostCompatibleFriend = {
                     totalScoreDifference: totalScoreDifference,
