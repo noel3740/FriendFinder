@@ -11,20 +11,26 @@
             <form id="createSurvey" class="needs-validation" novalidate>
                 <h5 class="card-title">About You</h5>
                 <div class="form-group">
-                    <label for="name">Name</label>
+                    <label for="name">Name <span style="color:red;">*</span></label>
                     <input type="text" class="form-control" name="name" placeholder="Enter your name" required>
+                    <div class="invalid-feedback">
+                        Please enter a name.
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="photoImageUrl">Link to Photo Image</label>
+                    <label for="photoImageUrl">Link to Photo Image <span style="color:red;">*</span></label>
                     <input type="url" class="form-control" placeholder="https://example.com" pattern="https://.*|http://.*"
                         name="photoImageUrl" placeholder="Enter your name" required>
+                    <div class="invalid-feedback">
+                        Please enter a valid photo image url.
+                    </div>
                 </div>
 
                 <hr>
 
                 {{#each questions}}
                 <div class="form-group">
-                    <h5 class="card-title">Question {{id}}</h5>
+                    <h5 class="card-title">Question {{id}} <span style="color:red;">*</span></h5>
                     <label for="question1">{{question}}</label>
                     <select class="form-control surveyQuestion" name="question{{id}}" style="width:auto;" required>
                         <option></option>
@@ -34,6 +40,9 @@
                         <option value="4">4</option>
                         <option value="5">5 (strongly disagree)</option>
                     </select>
+                    <div class="invalid-feedback">
+                        Please choose an answer.
+                    </div>
                 </div>
                 {{/each}}
 
@@ -63,15 +72,6 @@
     </section>
 
     <script type="text/javascript">
-
-        $(document).ready(() => {
-            //Loop thru all the forms that have the "needs-validation" class
-            //So that we can initialize the look of the fields that are required 
-            $(".needs-validation").each(function () {
-                this.checkValidity();
-                this.classList.add('was-validated');
-            });
-        })
 
         //Function that is run when a user hits submit on the survey page. 
         $("#createSurvey").on("submit", function (event) {
